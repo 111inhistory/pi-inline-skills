@@ -1,8 +1,6 @@
-# @tifan/pi-inline-skills
+# pi-inline-skills (fork)
 
-## Fork
-
-This fork is based on upstream [`tifandotme/pi-extensions@2bc1fd1`](https://github.com/tifandotme/pi-extensions/tree/2bc1fd1/packages/pi-inline-skills), targeting compatibility with `@earendil-works/pi-coding-agent` 1.4.0. It only fixes compatibility and packaging declarations.
+Fork of [`@tifan/pi-inline-skills`](https://github.com/tifandotme/pi-extensions/tree/2bc1fd1/packages/pi-inline-skills) 1.0.7 (upstream commit `2bc1fd1`). MIT licensed; the original copyright notice is retained in [LICENSE](LICENSE). This fork is not affiliated with the upstream author.
 
 Load skills from inside a pi prompt.
 
@@ -10,11 +8,19 @@ Type `/` and part of a skill name, pick a skill, then keep writing. On submit, t
 
 ![Inline skill autocomplete picker](https://raw.githubusercontent.com/tifandotme/pi-extensions/refs/heads/master/packages/pi-inline-skills/assets/skills-selector-triggered-inline.webp)
 
+## Changes from upstream
+
+- Inline slash-skill completion triggers on Pi 1.4, which inserts typed characters through `Editor.insertCharacter`. The guarded trigger is installed on both `insertCharacter` and `handleInput`.
+- Host packages are declared as `peerDependencies`.
+- Standalone `tsconfig.json` and `.gitignore`; no monorepo tooling.
+
 ## Install
 
 ```bash
-pi install npm:@tifan/pi-inline-skills
+pi install https://github.com/111inhistory/pi-inline-skills
 ```
+
+The npm package `@tifan/pi-inline-skills` is the upstream release and does not contain these fixes.
 
 ## Usage
 
@@ -42,4 +48,4 @@ See [CHANGELOG.md](https://github.com/tifandotme/pi-extensions/blob/master/packa
 
 ## License
 
-[MIT](https://github.com/tifandotme/pi-extensions/blob/master/LICENSE)
+MIT. The original copyright notice is retained in [LICENSE](LICENSE).

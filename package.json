@@ -9,14 +9,13 @@
     "pi-package",
     "skills"
   ],
-  "homepage": "https://github.com/tifandotme/pi-extensions/tree/master/packages/pi-inline-skills#readme",
-  "bugs": "https://github.com/tifandotme/pi-extensions/issues",
+  "homepage": "https://github.com/111inhistory/pi-inline-skills#readme",
+  "bugs": "https://github.com/111inhistory/pi-inline-skills/issues",
   "license": "MIT",
   "author": "Tifan Dwi Avianto <hi@tifan.me>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tifandotme/pi-extensions.git",
-    "directory": "packages/pi-inline-skills"
+    "url": "git+https://github.com/111inhistory/pi-inline-skills.git"
   },
   "files": [
     "src/**/*.ts",
