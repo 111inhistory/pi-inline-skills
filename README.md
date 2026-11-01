@@ -1,5 +1,9 @@
 # @tifan/pi-inline-skills
 
+## Fork
+
+This fork is based on upstream [`tifandotme/pi-extensions@2bc1fd1`](https://github.com/tifandotme/pi-extensions/tree/2bc1fd1/packages/pi-inline-skills), targeting compatibility with `@earendil-works/pi-coding-agent` 1.4.0. It only fixes compatibility and packaging declarations.
+
 Load skills from inside a pi prompt.
 
 Type `/` and part of a skill name, pick a skill, then keep writing. On submit, the prompt stays unchanged and the matching skill content is loaded for that turn.

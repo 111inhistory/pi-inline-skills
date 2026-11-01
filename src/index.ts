@@ -356,39 +356,59 @@ function mergeAutocompleteItems(options: {
   }
 }
 
+function maybeTriggerSlashAutocomplete(target: unknown, data: string): void {
+  const editor = target as {
+    isShowingAutocomplete?: () => boolean
+    state?: { cursorLine: number; cursorCol: number; lines: string[] }
+    tryTriggerAutocomplete?: () => void
+  }
+
+  if (
+    editor.isShowingAutocomplete?.() ||
+    !editor.state ||
+    typeof editor.tryTriggerAutocomplete !== "function"
+  )
+    return
+  if (!/^[a-zA-Z0-9\-_/]$/.test(data)) return
+
+  const currentLine = editor.state.lines[editor.state.cursorLine] ?? ""
+  const textBeforeCursor = currentLine.slice(0, editor.state.cursorCol)
+  if (SLASH_SKILL_CONTEXT_RE.test(textBeforeCursor)) {
+    editor.tryTriggerAutocomplete()
+  }
+}
+
 function installSlashAutocompleteTrigger(): void {
   const proto = CustomEditor.prototype as unknown as {
-    handleInput(data: string): void
+    handleInput?(data: string): void
+    insertCharacter?(char: string, skipUndoCoalescing?: boolean): void
     inlineSkillsSlashTriggerInstalled?: boolean
   }
   if (proto.inlineSkillsSlashTriggerInstalled) return
 
-  const originalHandleInput = proto.handleInput
-  proto.handleInput = function patchedHandleInput(
-    this: unknown,
-    data: string,
-  ): void {
-    const editor = this as {
-      isShowingAutocomplete?: () => boolean
-      state?: { cursorLine: number; cursorCol: number; lines: string[] }
-      tryTriggerAutocomplete?: () => void
-    }
-
-    originalHandleInput.call(this, data)
-    if (
-      editor.isShowingAutocomplete?.() ||
-      !editor.state ||
-      typeof editor.tryTriggerAutocomplete !== "function"
-    )
-      return
-    if (!/^[a-zA-Z0-9\-_/]$/.test(data)) return
-
-    const currentLine = editor.state.lines[editor.state.cursorLine] ?? ""
-    const textBeforeCursor = currentLine.slice(0, editor.state.cursorCol)
-    if (SLASH_SKILL_CONTEXT_RE.test(textBeforeCursor)) {
-      editor.tryTriggerAutocomplete()
+  if (typeof proto.handleInput === "function") {
+    const originalHandleInput = proto.handleInput
+    proto.handleInput = function patchedHandleInput(
+      this: unknown,
+      data: string,
+    ): void {
+      originalHandleInput.call(this, data)
+      maybeTriggerSlashAutocomplete(this, data)
     }
   }
+
+  if (typeof proto.insertCharacter === "function") {
+    const originalInsertCharacter = proto.insertCharacter
+    proto.insertCharacter = function patchedInsertCharacter(
+      this: unknown,
+      char: string,
+      skipUndoCoalescing?: boolean,
+    ): void {
+      originalInsertCharacter.call(this, char, skipUndoCoalescing)
+      maybeTriggerSlashAutocomplete(this, char)
+    }
+  }
+
   proto.inlineSkillsSlashTriggerInstalled = true
 }
 
